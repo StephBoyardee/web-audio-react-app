@@ -14,9 +14,12 @@ gain1.connect(out);
 let isStarted = false;
 
 function App() {
-  const [freq, setFreq] = useState(false)
-  const [detune, setDetune] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+
+  const [osc1Settings, setOsc1Settings] = useState({
+    frequency: 440,
+    detune: 0
+  })
 
   function handleClick() {
     if (!isStarted) {
@@ -27,24 +30,21 @@ function App() {
     setIsPlaying(!isPlaying);
   }
 
-  const changeOsc1Freq = (e) => {
-    setFreq(e.target.value);
-    osc1.frequency.value = e.target.value;
-    console.log(e.target.value);
-  };
-
-  const changeOsc1Detune = (e) => {
-    setDetune(e.target.value);
-    osc1.detune.value = e.target.value;
-    console.log(e.target.value);
-  };
+  function changeOsc1(e) {
+    let {value, id} = e.target;
+    setOsc1Settings({...osc1Settings, [id]: value});
+    osc1[id].value = value;
+  }
 
   return (
     <>
     <div className='App'>
       <h1>Sliders</h1>
       <button onClick={handleClick}>{isPlaying ? 'Stop' : 'Start'}</button>
-      <Osc1 changeFrequency={changeOsc1Freq} changeDetune={changeOsc1Detune}/>
+      <Osc1 
+      change={changeOsc1}
+      settings={osc1Settings}
+      />
     </div>
     </>
   )
