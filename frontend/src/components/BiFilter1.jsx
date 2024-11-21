@@ -1,5 +1,25 @@
-function BiFilter1( {change, settings, changeType} ) {
-  let {frequency, detune, Q, gain, type} = settings;
+import { useContext } from 'react';
+import {CTX} from '../context/Store';
+import {filter} from '../audioContext';
+
+
+function BiFilter1() {
+  const [state, dispatch] = useContext(CTX);
+  let {frequency, detune, Q, gain, type} = state.filter1Settings;
+
+  function change(e){
+    let {value, id} = e.target;
+    dispatch({type: 'CHANGE_FILTER1', payload: {...state.filter1Settings, [id]: value}});
+    filter[id].value = value;
+  }
+
+  function changeType(e){
+    let { id } = e.target;
+    dispatch({type: 'CHANGE_FILTER1_TYPE', payload: id});
+    filter.type = id;
+  }
+
+
   return (
     <div className='control'>
       <div className='param'>
@@ -33,10 +53,10 @@ function BiFilter1( {change, settings, changeType} ) {
 
       <div className='param'>
         <h3>Filter Type</h3>
-        <button className={`${type==='lowpass' && 'active'}`} onClick={changeType} id='lowpass' >Lowpass</button>
-        <button className={`${type==='highpass' && 'active'}`} onClick={changeType} id='highpass' >Highpass</button>
-        <button className={`${type==='bandpass' && 'active'}`} onClick={changeType} id='bandpass' >Bandpass</button>
-        <button className={`${type==='lowshelf' && 'active'}`} onClick={changeType} id='lowshelf' >Lowshelf</button>
+        <button value={type} className={`${type==='lowpass' && 'active'}`} onClick={changeType} id='lowpass' >Lowpass</button>
+        <button value={type} className={`${type==='highpass' && 'active'}`} onClick={changeType} id='highpass' >Highpass</button>
+        <button value={type} className={`${type==='bandpass' && 'active'}`} onClick={changeType} id='bandpass' >Bandpass</button>
+        <button value={type} className={`${type==='lowshelf' && 'active'}`} onClick={changeType} id='lowshelf' >Lowshelf</button>
       </div>
     </div>
   );
